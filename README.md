@@ -1,2 +1,2 @@
 # st-strava-data-analysis
-Planed Functionality: Pulls users' "run" activities and compare against a marathon training plan for weekly completion metrics and deep-dives.
+Planed State: Pulls users' "run" activities and compare against a marathon training plan for weekly completion metrics and deep-dives.
