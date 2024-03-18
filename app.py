@@ -108,9 +108,7 @@ if __name__ == "__main__":
     )
 
     # Strava token expires every 6 hours (21600 seconds)
-
-    if authentication_needed():
-        authenticate()
+    authentication_needed()
 
     if "strava_auth" in st.session_state:
         initialize_models()

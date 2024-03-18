@@ -26,12 +26,10 @@ def authentication_needed():
         # Strava access token expires after 6 hours
         time_difference = current_time - st.session_state.time
         if time_difference.seconds > 21600:
-            return True
+            authenticate()
 
     elif "strava_auth" not in st.session_state:
-        return True
-
-    return False
+        authenticate()
 
 
 def authenticate():
@@ -63,8 +61,6 @@ def authenticate():
 
 
 def strava_oauth_session(query_code):
-    # Button to initiate Strava authentication
-
     # If code is present in query parameters, exchange it for an access token
     access_token = exchange_code_for_token(query_code)
 
@@ -90,3 +86,6 @@ def exchange_code_for_token(code):
     response = requests.post(token_url, data=payload)
     if response.status_code == 200:
         return response.json()["access_token"]
+
+    else:
+        print(response.status_code)
