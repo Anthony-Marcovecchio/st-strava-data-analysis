@@ -4,41 +4,21 @@ from models import initialize_models
 from strava_auth import authenticate
 from utils import get_url_from_s3
 
-st.set_page_config(layout="wide")
 
+def main():
+    athlete = st.session_state.athlete
+    if athlete:
+        st.write(f" #### Welcome, {athlete.firstname}")
 
-def app():
-    st.title("🏃‍♂️ Percision Training. Powered by Strava.")
+    # streamlit tabs
+    tab1, tab2 = st.tabs(["Current Week", "Full Training Plan"])
+    with tab1:
+        # display current week's training plan
+        display_training_plan(timerange="current_week")
 
-    if "strava_auth" not in st.session_state:
-        authenticate()
-
-    else:
-        if st.session_state.strava_auth is not None:
-            initialize_models()
-
-        athlete = st.session_state.athlete
-        if athlete:
-            st.write(f" #### Welcome, {athlete.firstname}")
-
-        # streamlit tabs
-        tab1, tab2 = st.tabs(["Current Week", "Full Training Plan"])
-        with tab1:
-            # display current week's training plan
-            display_training_plan(timerange="current_week")
-
-        with tab2:
-            # display training plan
-            display_training_plan(timerange="all_weeks")
-
-        # show image from S3 in bottom right corner
-        # use html to place in bottom right of page
-        strava_logo = get_url_from_s3(usage="logo")
-        # use html to place in bottom right of page
-        st.markdown(
-            f'<img src="{strava_logo}" style="position: fixed; bottom: 0; right: 0; width: 200px;">',
-            unsafe_allow_html=True,
-        )
+    with tab2:
+        # display training plan
+        display_training_plan(timerange="all_weeks")
 
 
 def display_training_plan(timerange):
@@ -113,4 +93,21 @@ def display_training_plan(timerange):
         )
 
 
-app()
+if __name__ == "__main__":
+    st.set_page_config(
+        page_title="Percision Training. Powered by Strava.", layout="wide"
+    )
+
+    st.title("🏃‍♂️ Percision Training. Powered by Strava.")
+
+    # use html to place required Strava logo in bottom right of page
+    strava_logo = get_url_from_s3(usage="logo")
+    st.markdown(
+        f'<img src="{strava_logo}" style="position: fixed; bottom: 0; right: 0; width: 200px;">',
+        unsafe_allow_html=True,
+    )
+
+    authenticate()
+    if "strava_auth" in st.session_state:
+        initialize_models()
+        main()
