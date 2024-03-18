@@ -1,15 +1,23 @@
 import streamlit as st
-from data import strava_oauth_session, get_athlete_data
+from models import initialize_models
+from strava_auth import authenticate
+
+st.set_page_config(layout="wide")
 
 
 def app():
-    # on app start-up, make user authenticate with Strava
-    if "strava_session" not in st.session_state:
-        st.session_state.strava_session = strava_oauth_session()
+    st.title("Strava Dashboard")
 
-    if st.session_state.strava_session is not None:
-        data = get_athlete_data(st.session_state.strava_session)
-        st.write(data)
+    if "strava_auth" not in st.session_state:
+        authenticate()
+
+    else:
+        if st.session_state.strava_auth is not None:
+            initialize_models()
+
+        athlete = st.session_state.athlete
+        if athlete:
+            st.write(f" #### Welcome, {athlete.firstname}")
 
 
 app()
