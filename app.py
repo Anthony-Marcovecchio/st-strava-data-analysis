@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from models import initialize_models
-from strava_auth import authentication_needed, authenticate
+from strava_auth import authentication_needed
 from utils import get_url_from_s3
 
 
@@ -19,6 +19,10 @@ def main():
     with tab2:
         # display training plan
         display_training_plan(timerange="all_weeks")
+
+    # print(st.session_state.athlete_stats.recent_run_totals)
+    # print(st.session_state.athlete_stats.all_run_totals)
+    # print(st.session_state.athlete_stats.ytd_run_totals)
 
 
 def display_training_plan(timerange):

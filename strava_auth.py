@@ -12,8 +12,12 @@ CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 S3_BUCKET_IMAGE = os.getenv("S3_BUCKET_IMAGE")
 
-REDIRECT_URI = "http://localhost:8501/"
-AUTH_URL = f"https://www.strava.com/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&approval_prompt=auto&scope=activity:write,read"
+REDIRECT = (
+    "https://strava-marathon-prep.streamlit.app/"
+    if os.getenv("ENV") == "production"
+    else "http://localhost:8501/"
+)
+AUTH_URL = f"https://www.strava.com/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT}&response_type=code&approval_prompt=auto&scope=activity:write,read"
 
 # STRAVA API GUIDELINES
 # https://developers.strava.com/guidelines/
@@ -68,7 +72,7 @@ def strava_oauth_session(query_code):
         # Create session variable
         session = OAuth2Session(
             client_id=CLIENT_ID,
-            redirect_uri=REDIRECT_URI,
+            redirect_uri=REDIRECT,
             token={"access_token": access_token},
         )
 
