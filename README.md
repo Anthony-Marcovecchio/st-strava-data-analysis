@@ -1,2 +1,2 @@
 # st-strava-data-analysis
-Connects to Strava API to pull user activity data and display in Streamlit webapp 🏃‍♂️
+Target functionality: pulls users "run" activities and compare against a marathon training plan for weekly completion metrics and deep-dives.
