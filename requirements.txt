@@ -2,4 +2,5 @@ streamlit
 pandas
 dotenv
 requests_oauthlib
-streamlit_server_state
+st-click-detector
+python-dotenv

@@ -7,7 +7,7 @@ st.set_page_config(layout="wide")
 
 
 def app():
-    st.title("Strava Dashboard")
+    st.title("🏃‍♂️ Percision Training (Powered by Strava)")
 
     if "strava_auth" not in st.session_state:
         authenticate()
@@ -20,8 +20,15 @@ def app():
         if athlete:
             st.write(f" #### Welcome, {athlete.firstname}")
 
-        # display training plan
-        display_training_plan(timerange="current_week")
+        # streamlit tabs
+        tab1, tab2 = st.tabs(["Current Week", "Full Training Plan"])
+        with tab1:
+            # display current week's training plan
+            display_training_plan(timerange="current_week")
+
+        with tab2:
+            # display training plan
+            display_training_plan(timerange="all_weeks")
 
 
 def display_training_plan(timerange):
@@ -48,26 +55,26 @@ def display_training_plan(timerange):
         )
         plan = plan[plan["start_of_week"] == start_of_week]
 
-        st.markdown(
-            '<div style="height: 2px;"></div>'
-            '<div style="display: flex;"><div style="width: 200px;">WEEK START</div>\
-        <div style="width: 100px;">MON</div>\
-           <div style="width: 100px;">TUE</div>\
-              <div style="width: 100px;">WED</div>\
-                 <div style="width: 100px;">THU</div>\
-                    <div style="width: 100px;">FRI</div>\
-                       <div style="width: 100px;">SAT</div>\
-                          <div style="width: 100px;">SUN</div>\
-        <div style="width: 50px;">TOTAL</div>\
-        <div style="height: 30px;"></div>',
-            unsafe_allow_html=True,
-        )
+    st.markdown(
+        '<div style="height: 2px;"></div>'
+        '<div style="display: flex;"><div style="width: 200px;">WEEK START</div>\
+    <div style="width: 100px;">MON</div>\
+        <div style="width: 100px;">TUE</div>\
+            <div style="width: 100px;">WED</div>\
+                <div style="width: 100px;">THU</div>\
+                <div style="width: 100px;">FRI</div>\
+                    <div style="width: 100px;">SAT</div>\
+                        <div style="width: 100px;">SUN</div>\
+    <div style="width: 50px;">TOTAL</div>\
+    <div style="height: 30px;"></div>',
+        unsafe_allow_html=True,
+    )
 
-        # st markdown a horizontal bar
-        st.markdown(
-            '<div style="height: 2px; background-color: black;"></div>',
-            unsafe_allow_html=True,
-        )
+    # st markdown a horizontal bar
+    st.markdown(
+        '<div style="height: 2px; background-color: black;"></div>',
+        unsafe_allow_html=True,
+    )
 
     for _, row in plan.iterrows():
         start_of_week = row["start_of_week"]
@@ -84,12 +91,12 @@ def display_training_plan(timerange):
             '<div style="height: 2px;"></div>'
             f'<div style="display: flex;"><div style="width: 200px;">{start_of_week}</div>\
         <div style="width: 100px;">{mon_km}</div>\
-           <div style="width: 100px;">{tue_km}</div>\
-              <div style="width: 100px;">{wed_km}</div>\
-                 <div style="width: 100px;">{thu_km}</div>\
+            <div style="width: 100px;">{tue_km}</div>\
+                <div style="width: 100px;">{wed_km}</div>\
+                    <div style="width: 100px;">{thu_km}</div>\
                     <div style="width: 100px;">{fri_km}</div>\
-                       <div style="width: 100px;">{sat_km}</div>\
-                          <div style="width: 100px;">{sun_km}</div>\
+                        <div style="width: 100px;">{sat_km}</div>\
+                            <div style="width: 100px;">{sun_km}</div>\
         <div style="width: 50px;">{total_week_km}</div>\
         <div style="height: 30px;"></div>',
             unsafe_allow_html=True,
