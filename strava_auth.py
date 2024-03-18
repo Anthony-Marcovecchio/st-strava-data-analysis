@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from requests_oauthlib import OAuth2Session
 from utils import get_url_from_s3
+from datetime import datetime
 
 load_dotenv()
 
@@ -16,6 +17,21 @@ AUTH_URL = f"https://www.strava.com/oauth/authorize?client_id={CLIENT_ID}&redire
 
 # STRAVA API GUIDELINES
 # https://developers.strava.com/guidelines/
+
+
+def authentication_needed():
+    current_time = datetime.now()
+
+    if "time" in st.session_state:
+        # Strava access token expires after 6 hours
+        time_difference = current_time - st.session_state.time
+        if time_difference.seconds > 21600:
+            return True
+
+    elif "strava_auth" not in st.session_state:
+        return True
+
+    return False
 
 
 def authenticate():
@@ -39,6 +55,7 @@ def authenticate():
         session = strava_oauth_session(query_code)
         if session is not None:
             st.session_state.strava_auth = session
+            st.session_state.time = datetime.now()
             st.rerun()
 
     except Exception as e:

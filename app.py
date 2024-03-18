@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from models import initialize_models
-from strava_auth import authenticate
+from strava_auth import authentication_needed, authenticate
 from utils import get_url_from_s3
 
 
@@ -107,7 +107,11 @@ if __name__ == "__main__":
         unsafe_allow_html=True,
     )
 
-    authenticate()
+    # Strava token expires every 6 hours (21600 seconds)
+
+    if authentication_needed():
+        authenticate()
+
     if "strava_auth" in st.session_state:
         initialize_models()
         main()
