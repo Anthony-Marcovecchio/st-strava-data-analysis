@@ -1,2 +1,2 @@
 # st-strava-data-analysis
-Target functionality: pulls users "run" activities and compare against a marathon training plan for weekly completion metrics and deep-dives.
+Planed Functionality: Pulls users' "run" activities and compare against a marathon training plan for weekly completion metrics and deep-dives.
