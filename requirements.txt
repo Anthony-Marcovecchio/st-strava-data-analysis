@@ -1,5 +1,2 @@
-streamlit
-pandas
-dotenv
 requests_oauthlib
 python-dotenv
