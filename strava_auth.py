@@ -3,8 +3,6 @@ import requests
 import os
 from dotenv import load_dotenv
 from requests_oauthlib import OAuth2Session
-from PIL import Image
-from st_click_detector import click_detector
 from utils import get_url_from_s3
 
 load_dotenv()
@@ -21,10 +19,10 @@ AUTH_URL = f"https://www.strava.com/oauth/authorize?client_id={CLIENT_ID}&redire
 
 
 def authenticate():
-    if "strava_auth" not in st.session_state:
+    try:
         # STRAVA REQUIRED - clickable image button
         # 1.1 Connect with Strava buttons
-        image_url = get_url_from_s3()
+        image_url = get_url_from_s3(usage="auth")
 
         content = f"""
             <a href="{AUTH_URL}" id="image_link">
@@ -32,20 +30,19 @@ def authenticate():
             </a>
         """
 
-        clicked = click_detector(content)
+        st.markdown(content, unsafe_allow_html=True)
 
-        if clicked != "":
-            # Parse query parameters from URL
-            query_code = st.query_params.get_all(key="code")
+        # Parse query parameters from URL
+        query_code = st.query_params.get_all(key="code")
 
-            # Create session variable
-            session = strava_oauth_session(query_code)
-            if session is not None:
-                st.session_state.strava_auth = session
-                st.rerun()
+        # Create session variable
+        session = strava_oauth_session(query_code)
+        if session is not None:
+            st.session_state.strava_auth = session
+            st.rerun()
 
-    else:
-        st.session_state.strava_auth = None
+    except Exception as e:
+        print(e)
 
 
 def strava_oauth_session(query_code):
@@ -76,5 +73,3 @@ def exchange_code_for_token(code):
     response = requests.post(token_url, data=payload)
     if response.status_code == 200:
         return response.json()["access_token"]
-    else:
-        st.write("Failed to obtain access token:", response.text)

@@ -2,12 +2,13 @@ import streamlit as st
 import pandas as pd
 from models import initialize_models
 from strava_auth import authenticate
+from utils import get_url_from_s3
 
 st.set_page_config(layout="wide")
 
 
 def app():
-    st.title("🏃‍♂️ Percision Training (Powered by Strava)")
+    st.title("🏃‍♂️ Percision Training. Powered by Strava.")
 
     if "strava_auth" not in st.session_state:
         authenticate()
@@ -29,6 +30,15 @@ def app():
         with tab2:
             # display training plan
             display_training_plan(timerange="all_weeks")
+
+        # show image from S3 in bottom right corner
+        # use html to place in bottom right of page
+        strava_logo = get_url_from_s3(usage="logo")
+        # use html to place in bottom right of page
+        st.markdown(
+            f'<img src="{strava_logo}" style="position: fixed; bottom: 0; right: 0; width: 200px;">',
+            unsafe_allow_html=True,
+        )
 
 
 def display_training_plan(timerange):
