@@ -179,7 +179,7 @@ def display_training_plan(timerange):
                 elif row_date.date() > pd.to_datetime("today").date():
                     return "grey"
                 else:
-                    return "red"
+                    return "#FFC300"
 
             # set colours codes for each weekday if strava_km >= plan_km
             mon_colour = set_colour_codes(mon_strava_km, mon_km)
@@ -216,7 +216,6 @@ def display_training_plan(timerange):
                 total_week_strava_km = "--"
 
             st.markdown(
-                '<div style="height: 2px;"></div>'
                 f'<div style="display: flex;"><div style="width: 200px;">{start_of_week}</div>\
                 <div style="width: 100px; color: {mon_colour};">{mon_km}</div>\
                 <div style="width: 100px; color: {tue_colour};">{tue_km}</div>\
@@ -229,8 +228,7 @@ def display_training_plan(timerange):
                 <div style="width: 25px;"></div>\
                 <div style="width: 150px; color: {total_week_colour};"><b>{total_week_km}</b></div>\
                 <div style="width: 150px; color: {total_week_colour};"><b>{total_week_strava_km}</b></div>\
-                <div style="width: 150px; color: {total_week_colour};"><b>{completion_percent}</b></div>\
-                <div style="height: 30px;"></div>',
+                <div style="width: 150px; color: {total_week_colour};"><b>{completion_percent}</b></div>',
                 unsafe_allow_html=True,
             )
 
