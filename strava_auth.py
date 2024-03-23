@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-import os
+from os import getenv
 from dotenv import load_dotenv
 from requests_oauthlib import OAuth2Session
 from utils import get_url_from_s3
@@ -8,16 +8,16 @@ from datetime import datetime
 
 load_dotenv()
 
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-S3_BUCKET_IMAGE = os.getenv("S3_BUCKET_IMAGE")
+CLIENT_ID = getenv("CLIENT_ID")
+CLIENT_SECRET = getenv("CLIENT_SECRET")
+S3_BUCKET_IMAGE = getenv("S3_BUCKET_IMAGE")
 
 REDIRECT = (
     "https://strava-marathon-prep.streamlit.app/"
-    if os.getenv("ENV") == "production"
+    if getenv("ENV") == "production"
     else "http://localhost:8501/"
 )
-AUTH_URL = f"https://www.strava.com/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT}&response_type=code&approval_prompt=auto&scope=activity:write,read"
+AUTH_URL = f"https://www.strava.com/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT}&response_type=code&approval_prompt=auto&scope=activity:read_all,"
 
 # STRAVA API GUIDELINES
 # https://developers.strava.com/guidelines/
