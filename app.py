@@ -8,7 +8,7 @@ from data import display_training_plan, display_progress_graph
 def main():
     athlete = st.session_state.athlete
     if athlete:
-        st.write(f" #### Welcome, {athlete.firstname}")
+        st.write(f" #### 👋 Welcome, {athlete.firstname}")
 
     tab1, tab2, tab3 = st.tabs(["Current Week", "Full Training Plan", "Progress Graph"])
     with tab1:  # display current week's training plan
