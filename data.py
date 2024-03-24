@@ -72,7 +72,12 @@ def display_progress_graph():
     current_week = pd.to_datetime("today").week + 1
     merged = merged[merged["week_number"] <= current_week]
 
-    st.line_chart(merged, x="start_of_week", y=["Plan KM", "Strava KM"])
+    st.line_chart(
+        data=merged,
+        x="start_of_week",
+        y=["Plan KM", "Strava KM"],
+        color=["#0276fd", "#fc4c02"],
+    )
 
 
 def display_training_plan(timerange):
@@ -225,7 +230,7 @@ def display_training_plan(timerange):
                     return "#8A2BE2"
 
                 if plan_km == "REST" and strava_km > 0:
-                    return "blue"
+                    return "#0276fd"
                 elif plan_km == "REST":
                     return "grey"
                 elif strava_km >= plan_km:
