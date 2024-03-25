@@ -18,39 +18,30 @@ def display_progress_graph():
     plan["start_of_week"] = plan["start_of_week"].str.strip()
 
     # convert plan start_of_week to datetime
-    plan["start_of_week"] = pd.to_datetime(
+    plan["start_of_week_dt"] = pd.to_datetime(
         plan["start_of_week"] + " " + str(pd.to_datetime("today").year)
     )
 
     # add week_number-year column to plan and strava_runs
-    plan["week_number"] = plan["start_of_week"].dt.isocalendar().week
-    plan["week_year"] = (
-        plan["week_number"].astype(str)
-        + "-"
-        + plan["start_of_week"].dt.year.astype(str)
-    )
-    strava_runs["week_year"] = (
-        strava_runs["start_date_local"].dt.isocalendar().week.astype(str)
-        + "-"
-        + strava_runs["start_date_local"].dt.year.astype(str)
-    )
+    plan["week_number"] = plan["start_of_week_dt"].dt.isocalendar().week
+    strava_runs["week_number"] = strava_runs["start_date_local"].dt.isocalendar().week
 
-    # merge plan and strava_runs on week_year
+    # merge plan and strava_runs on week_number
     merged = pd.merge(
         plan,
         strava_runs,
         how="left",
-        on="week_year",
+        on="week_number",
         suffixes=("_plan", "_strava"),
     )
 
     # group by start_of_week and sum distance
     merged = merged.groupby("start_of_week").agg(
         {
+            "start_of_week": "first",
             "total_week_km": "first",
             "distance": "sum",
             "week_number": "first",
-            "start_of_week": "first",
         }
     )
 
@@ -63,10 +54,21 @@ def display_progress_graph():
 
     # rename x columns
     merged.rename(
-        columns={"distance": "Strava KM", "total_week_km": "Plan KM"}, inplace=True
+        columns={
+            "distance": "Strava KM",
+            "total_week_km": "Plan KM",
+        },
+        inplace=True,
     )
 
-    # st.dataframe(merged)
+    # sort by week_number
+    current_year = pd.to_datetime("today").year
+    merged["start_of_week"] = pd.to_datetime(
+        merged["start_of_week"] + " " + str(current_year), format="%d %B %Y"
+    )
+
+    # convert start_of_week to string in mm/dd format
+    merged["Start of Week"] = merged["start_of_week"].dt.strftime("%m/%d")
 
     # data up to current week only, based on week number
     current_week = pd.to_datetime("today").week + 1
@@ -74,7 +76,7 @@ def display_progress_graph():
 
     st.line_chart(
         data=merged,
-        x="start_of_week",
+        x="Start of Week",
         y=["Plan KM", "Strava KM"],
         color=["#0276fd", "#fc4c02"],
     )
