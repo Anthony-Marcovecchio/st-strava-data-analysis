@@ -56,7 +56,7 @@ def display_progress_graph():
     merged.rename(
         columns={
             "distance": "Strava KM",
-            "total_week_km": "Plan KM",
+            "total_week_km": "Planned KM",
         },
         inplace=True,
     )
@@ -77,7 +77,7 @@ def display_progress_graph():
     st.line_chart(
         data=merged,
         x="Start of Week",
-        y=["Plan KM", "Strava KM"],
+        y=["Planned KM", "Strava KM"],
         color=["#0276fd", "#fc4c02"],
     )
 
