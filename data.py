@@ -163,11 +163,10 @@ def display_training_plan(timerange):
             # get week number from start_of_week (starting from Monday)
             row_week_number = row_date.week
             # compare to current day week number
-            current_week_number = pd.to_datetime("today").week
+            curr_week_number = pd.to_datetime("today").week
 
-            next_run_week = False
-            if row_week_number == current_week_number + 1:
-                next_run_week = True
+            curr_run_week = True if row_week_number == curr_week_number else False
+            next_run_week = True if row_week_number == curr_week_number + 1 else False
 
             # create dates for each weekday in 'yyyy-mm-dd' format
             monday_date = (row_date + pd.DateOffset(days=0)).date()
@@ -226,9 +225,10 @@ def display_training_plan(timerange):
 
             def set_colour_codes(strava_km, plan_km):
                 # set colour as purple if next run week from current week
-                if next_run_week:
+                if curr_run_week and strava_km == 0:
+                    return "white"
+                elif next_run_week:
                     return "#8A2BE2"
-
                 if plan_km == "REST" and strava_km > 0:
                     return "#0276fd"
                 elif plan_km == "REST":
@@ -266,7 +266,7 @@ def display_training_plan(timerange):
 
             total_week_colour = set_colour_codes(total_week_strava_km, total_week_km)
 
-            if row_date.date() < pd.to_datetime("today").date():
+            if row_date.date() <= pd.to_datetime("today").date():
                 completion_percent = (
                     f"{round((total_week_strava_km / total_week_km) * 100, 1)}%"
                 )
